@@ -1,0 +1,10 @@
+{
+    "required": "Le champ {field} est obligatoire.",
+    "unique": "Le champ {field} est déjà utilisé.",
+    "min_length": "Le champ {field} doit contenir au moins {min} caractères.",
+    "max_length": "Le champ {field} ne doit pas dépasser {max} caractères.",
+    "email": "Le champ {field} doit être une adresse email valide.",
+    "confirmed": "La confirmation du champ {field} ne correspond pas.",
+    "welcome": "Bienvenue sur Arvel !",
+    "user_created": "L'utilisateur {name} a été créé avec succès."
+}

@@ -1,0 +1,36 @@
+[project]
+name = "arvel-starter"
+version = "0.1.0"
+description = "Starter application for Arvel framework"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "arvel[argon2,media,otel,pg,redis,s3,smtp,taskiq]",
+]
+
+[project.optional-dependencies]
+dev = ["faker>=40.13.0", "pytest>=9.0.3", "ruff>=0.15.9", "ty>=0.0.29"]
+
+[dependency-groups]
+dev = ["aiosqlite>=0.22.1"]
+
+[tool.uv.sources]
+arvel = { git = "https://github.com/mohamed-rekiba/arvel", rev = "main" }
+
+[tool.uv]
+package = false
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = ["integration: tests requiring integration-level behavior"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S106"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

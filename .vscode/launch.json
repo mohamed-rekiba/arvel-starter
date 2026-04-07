@@ -1,0 +1,89 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug: Serve (Arvel CLI)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "arvel",
+      "args": [
+        "serve"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "APP_ENV": "development",
+        "APP_DEBUG": "true"
+      }
+    },
+    {
+      "name": "Debug: Serve (Uvicorn)",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": [
+        "bootstrap.app:create_app",
+        "--factory",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "8000",
+        "--reload"
+      ],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "justMyCode": true,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}",
+        "APP_ENV": "development",
+        "APP_DEBUG": "true"
+      }
+    },
+    {
+      "name": "Debug: Current File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Debug: All Tests",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "tests/",
+        "-v",
+        "--tb=short",
+        "-x",
+        "--no-header"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "APP_ENV": "testing"
+      }
+    },
+    {
+      "name": "Debug: Current Test File",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "pytest",
+      "args": [
+        "${file}",
+        "-v",
+        "--tb=short",
+        "-x",
+        "--no-header"
+      ],
+      "console": "integratedTerminal",
+      "justMyCode": true,
+      "env": {
+        "APP_ENV": "testing"
+      }
+    }
+  ]
+}
