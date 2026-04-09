@@ -1,0 +1,61 @@
+# {{ app_name_title }}
+
+Built with [Arvel](https://github.com/mohamed-rekiba/arvel) — async-first, type-safe Python web framework.
+
+## Getting started
+
+### Install dependencies
+
+```bash
+uv sync
+```
+
+### Run the dev server
+
+```bash
+arvel serve
+```
+
+The app starts at [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+### Database
+
+```bash
+arvel db migrate    # Run migrations
+arvel db seed       # Seed data
+arvel db fresh      # Drop, recreate, migrate, and seed
+```
+
+### Tests
+
+```bash
+pytest tests/ -v
+```
+
+### Code quality
+
+```bash
+ruff check .        # Lint
+ruff format .       # Format
+```
+
+## Project structure
+
+```text
+{{ app_name }}/
+  bootstrap/            # Application factory and service providers
+  config/               # Configuration modules (app, database)
+  app/
+    http/controllers/   # HTTP controllers
+    http/requests/      # Request validation
+    http/resources/     # API resources
+    models/             # Data models
+    observers/          # Model observers
+    providers/          # Service providers
+    events/             # Event classes
+    listeners/          # Event listeners
+    jobs/               # Background jobs
+  tests/                # Test suite
+  database/             # Migrations and seeds
+  storage/              # File storage
+```

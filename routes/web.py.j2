@@ -1,0 +1,7 @@
+"""{{ app_name_title }} — web routes."""
+
+from arvel.http.router import Router
+
+router = Router()
+
+router.get("/", lambda: {"message": "Welcome to {{ app_name_title }}"}, name="home")

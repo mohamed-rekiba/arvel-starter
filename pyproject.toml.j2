@@ -1,0 +1,48 @@
+[project]
+name = "{{ app_name }}"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">={{ python_version }}"
+dependencies = ["arvel{{ arvel_extras }}>={{ arvel_version }}"]
+
+[project.optional-dependencies]
+dev = [
+    "faker>=40.13.0",
+    "pytest>=9.0.3",
+    "pytest-cov>=7.0.0",
+    "pytest-timeout>=2.4.0",
+    "dirty-equals>=0.11",
+    "anyio[trio]>=4.13.0",
+    "filelock>=3.18.0",
+    "ruff>=0.15.9",
+    "ty>=0.0.29",
+]
+
+[tool.uv.sources]
+arvel = { git = "https://github.com/mohamed-rekiba/arvel", tag = "v{{ arvel_version }}" }
+
+[tool.uv]
+package = false
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = ["--strict-config", "--strict-markers", "-x", "--tb=short"]
+xfail_strict = true
+filterwarnings = ["error", "ignore::DeprecationWarning:aiosqlite.*"]
+timeout = 30
+markers = [
+    "db: marks tests that require database (deselect with '-m \"not db\"')",
+    "integration: marks tests requiring live services (Docker)",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["S101", "S105", "S106"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

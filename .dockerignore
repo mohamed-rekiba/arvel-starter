@@ -1,0 +1,50 @@
+# Virtual environment (rebuilt in container)
+.venv
+
+# VCS
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+
+# Test and coverage
+.tests/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Bytecode
+__pycache__/
+*.pyc
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Secrets / env
+.env
+.env.*
+
+# Docs and context
+docs/
+.context/
+*.md
+!README.md
+
+# CI
+.github/
+
+# OS
+.DS_Store
+Thumbs.db

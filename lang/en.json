@@ -1,0 +1,10 @@
+{
+    "required": "The {field} field is required.",
+    "unique": "The {field} has already been taken.",
+    "min_length": "The {field} must be at least {min} characters.",
+    "max_length": "The {field} must not exceed {max} characters.",
+    "email": "The {field} must be a valid email address.",
+    "confirmed": "The {field} confirmation does not match.",
+    "welcome": "Welcome to Arvel!",
+    "user_created": "User {name} was created successfully."
+}
