@@ -9,6 +9,11 @@ on:
 permissions:
   contents: read
 
+env:
+  ARVEL_VERSION: "0.3.0"
+  ARVEL_EXTRAS: "[sqlite,media]"
+  PYTHON_VERSION: "3.14"
+
 jobs:
   lint:
     name: Lint & Format
@@ -17,9 +22,16 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.14"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Render pyproject.toml from template
+        run: |
+          sed -e "s/{{ app_name }}/arvel-starter/" \
+              -e "s/{{ python_version }}/${{ env.PYTHON_VERSION }}/" \
+              -e "s/{{ arvel_extras }}/${{ env.ARVEL_EXTRAS }}/" \
+              -e "s/{{ arvel_version }}/${{ env.ARVEL_VERSION }}/g" \
+              pyproject.toml.j2 > pyproject.toml
       - name: Install dependencies
         run: uv sync --all-extras
       - name: Ruff check
@@ -35,9 +47,16 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.14"
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - name: Render pyproject.toml from template
+        run: |
+          sed -e "s/{{ app_name }}/arvel-starter/" \
+              -e "s/{{ python_version }}/${{ env.PYTHON_VERSION }}/" \
+              -e "s/{{ arvel_extras }}/${{ env.ARVEL_EXTRAS }}/" \
+              -e "s/{{ arvel_version }}/${{ env.ARVEL_VERSION }}/g" \
+              pyproject.toml.j2 > pyproject.toml
       - name: Install dependencies
         run: uv sync --all-extras
       - name: Run tests
