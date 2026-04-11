@@ -9,12 +9,15 @@ Demonstrates:
 
 from __future__ import annotations
 
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from arvel.i18n import trans
 from arvel.validation import FormRequest, Unique
-from arvel.validation.rule import AsyncRule, Rule
-from sqlalchemy.ext.asyncio import AsyncSession
+
+if TYPE_CHECKING:
+    from sqlalchemy.ext.asyncio import AsyncSession
+
+    from arvel.validation.rule import AsyncRule, Rule
 
 
 class _Required:

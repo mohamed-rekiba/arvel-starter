@@ -39,9 +39,7 @@ class AuthSettings(ModuleSettings):
     default_passwords: str = "users"
     guards: dict[str, dict[str, str]] = Field(default_factory=_default_guards)
     providers: dict[str, dict[str, str]] = Field(default_factory=_default_providers)
-    passwords: dict[str, dict[str, int | str]] = Field(
-        default_factory=_default_passwords
-    )
+    passwords: dict[str, dict[str, int | str]] = Field(default_factory=_default_passwords)
 
 
 settings_class = AuthSettings

@@ -8,10 +8,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from app.models.user import User
 from arvel.security.contracts import HasherContract
 from arvel.security.hashing import BcryptHasher
-
-from app.models.user import User
 
 if TYPE_CHECKING:
     from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,7 +21,7 @@ _counter = 0
 
 
 def _next_seq() -> int:
-    global _counter  # noqa: PLW0603
+    global _counter
     _counter += 1
     return _counter
 

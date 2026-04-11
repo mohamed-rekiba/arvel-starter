@@ -10,9 +10,10 @@ from typing import TYPE_CHECKING
 
 import filelock
 import pytest
-from arvel.data.model import ArvelModel
 from sqlalchemy import create_engine, event
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
+from arvel.data.model import ArvelModel
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator

@@ -71,8 +71,5 @@ def pytest_collection_modifyitems(items: list[pytest.Item]) -> None:
             fn = item.function
             if hasattr(fn, "__wrapped__") or inspect.iscoroutinefunction(fn):
                 item.add_marker(anyio_marker)
-        if (
-            any(d in fspath for d in _DB_TEST_DIRS)
-            and item.get_closest_marker("db") is None
-        ):
+        if any(d in fspath for d in _DB_TEST_DIRS) and item.get_closest_marker("db") is None:
             item.add_marker(db_marker)

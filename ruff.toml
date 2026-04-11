@@ -1,0 +1,22 @@
+extend = "../../pyproject.toml"
+extend-exclude = ["database/migrations/versions"]
+
+[lint]
+extend-ignore = [
+    "B008",  # Inject() / File() / Query() / Path() in function defaults is the Arvel DI pattern
+]
+
+[lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",    # assert is fine in tests
+    "S105",    # hardcoded passwords/tokens are fine in fixtures
+    "S106",    # hardcoded password args are fine in test fixtures
+    "S107",    # hardcoded password defaults are fine in test factories
+    "PLR2004", # magic values are fine in assertions
+    "ANN",     # test functions don't need type annotations
+    "TC001",   # type-checking imports not needed in tests
+]
+"database/factories/**/*.py" = [
+    "S107",  # hardcoded password defaults are fine in factories
+    "TC001", # type-checking imports not needed in factories
+]

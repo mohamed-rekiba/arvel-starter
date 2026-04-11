@@ -8,12 +8,14 @@ is built from ``MailSettings`` (env vars).  This mirrors the framework's
 from __future__ import annotations
 
 import logging
-
-from arvel.mail.config import MailSettings
-from arvel.mail.contracts import MailContract
-from arvel.queue import Job
+from typing import TYPE_CHECKING
 
 from app.mail.welcome_mail import WelcomeMail
+from arvel.mail.config import MailSettings
+from arvel.queue import Job
+
+if TYPE_CHECKING:
+    from arvel.mail.contracts import MailContract
 
 logger = logging.getLogger(__name__)
 

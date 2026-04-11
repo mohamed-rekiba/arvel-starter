@@ -10,16 +10,16 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from app.models.user import User
+from app.observers.user_observer import UserObserver
 from arvel.broadcasting.contracts import BroadcastContract
-from arvel.data import ArvelModel, ObserverRegistry
+from arvel.data import ArvelModel
 from arvel.events import EventDispatcher
 from arvel.foundation.provider import ServiceProvider
 from arvel.search.contracts import SearchEngine
 
-from app.models.user import User
-from app.observers.user_observer import UserObserver
-
 if TYPE_CHECKING:
+    from arvel.data import ObserverRegistry
     from arvel.foundation.application import Application
 
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ class DataProvider(ServiceProvider):
             event_dispatcher=event_dispatcher,
         )
 
-        registry = ArvelModel._observer_registry_resolver  # noqa: SLF001
+        registry = ArvelModel._observer_registry_resolver
         if registry is not None:
             obs_registry: ObserverRegistry = registry()
             obs_registry.register(User, observer)

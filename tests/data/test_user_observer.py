@@ -4,15 +4,14 @@ from __future__ import annotations
 
 from typing import Any
 
+from app.events.user_created import UserCreated
+from app.models.user import User
+from app.observers.user_observer import UserObserver
 from arvel.broadcasting.channels import Channel
 from arvel.broadcasting.contracts import BroadcastContract
 from arvel.events.dispatcher import EventDispatcher
 from arvel.events.event import Event
 from arvel.search.contracts import SearchEngine, SearchResult
-
-from app.events.user_created import UserCreated
-from app.models.user import User
-from app.observers.user_observer import UserObserver
 
 
 class _SpySearchEngine(SearchEngine):

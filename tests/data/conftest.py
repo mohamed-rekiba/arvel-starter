@@ -13,13 +13,13 @@ from typing import TYPE_CHECKING
 
 import filelock
 import pytest
-from arvel.data.model import ArvelModel
-from arvel.data.observer import ObserverRegistry
-from arvel.data.transaction import Transaction
 from sqlalchemy import create_engine, event
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from app.repositories.user_repository import UserRepository
+from arvel.data.model import ArvelModel
+from arvel.data.observer import ObserverRegistry
+from arvel.data.transaction import Transaction
 
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
@@ -86,7 +86,5 @@ def observer_registry() -> ObserverRegistry:
 
 
 @pytest.fixture
-def transaction(
-    db_session: AsyncSession, observer_registry: ObserverRegistry
-) -> AppTransaction:
+def transaction(db_session: AsyncSession, observer_registry: ObserverRegistry) -> AppTransaction:
     return AppTransaction(session=db_session, observer_registry=observer_registry)

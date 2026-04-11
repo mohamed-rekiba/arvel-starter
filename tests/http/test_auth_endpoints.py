@@ -25,9 +25,7 @@ def _make_token_service() -> TokenService:
     )
 
 
-async def _seed_user(
-    client: TestClient, email: str, password: str = "password123"
-) -> dict:
+async def _seed_user(client: TestClient, email: str, password: str = "password123") -> dict:
     """Create a user via the API with a bcrypt-hashed password.
 
     The store endpoint passes the password through directly to the DB,
