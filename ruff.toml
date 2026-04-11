@@ -1,9 +1,29 @@
-extend = "../../pyproject.toml"
+target-version = "py314"
+line-length = 100
 extend-exclude = ["database/migrations/versions"]
 
 [lint]
-extend-ignore = [
-    "B008",  # Inject() / File() / Query() / Path() in function defaults is the Arvel DI pattern
+select = [
+    "E",     # pycodestyle errors
+    "F",     # pyflakes (unused imports, undefined names)
+    "W",     # pycodestyle warnings
+    "I",     # isort
+    "N",     # pep8-naming
+    "UP",    # pyupgrade
+    "B",     # flake8-bugbear
+    "A",     # flake8-builtins
+    "SIM",   # flake8-simplify
+    "TCH",   # flake8-type-checking
+    "RUF",   # ruff-specific rules
+    "ASYNC", # flake8-async
+    "S",     # flake8-bandit security checks
+    "PTH",   # flake8-use-pathlib
+    "C90",   # mccabe complexity
+    "ANN",   # flake8-annotations
+]
+ignore = [
+    "ANN401", # Any in signatures is acceptable
+    "B008",   # Inject() / File() / Query() / Path() in defaults is the Arvel DI pattern
 ]
 
 [lint.per-file-ignores]
@@ -20,3 +40,16 @@ extend-ignore = [
     "S107",  # hardcoded password defaults are fine in factories
     "TC001", # type-checking imports not needed in factories
 ]
+
+[lint.flake8-annotations]
+allow-star-arg-any = true
+suppress-none-returning = true
+
+[lint.flake8-type-checking]
+strict = true
+
+[format]
+quote-style = "double"
+
+[lint.isort]
+known-first-party = ["arvel"]
