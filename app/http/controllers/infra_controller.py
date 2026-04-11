@@ -11,11 +11,12 @@ import binascii
 import logging
 from typing import Any
 
+from pydantic import BaseModel, Field
+
 from arvel.cache.contracts import CacheContract
 from arvel.http import BaseController, HTTPException, Inject, route, status
 from arvel.lock.contracts import LockContract
 from arvel.storage.contracts import StorageContract
-from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
@@ -174,12 +175,10 @@ class InfraController(BaseController):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid base64 content",
-            )
+            ) from None
         await storage.put(payload.path, data, content_type=payload.content_type)
         url = await storage.url(payload.path)
-        return StorageDemoResponse(
-            path=payload.path, action="stored", url=url, size=len(data)
-        )
+        return StorageDemoResponse(path=payload.path, action="stored", url=url, size=len(data))
 
     @route.get(
         "/storage/{path:path}",
@@ -195,9 +194,7 @@ class InfraController(BaseController):
         exists = await storage.exists(path)
         url = await storage.url(path) if exists else None
         size = await storage.size(path) if exists else None
-        return StorageDemoResponse(
-            path=path, action="info", url=url, size=size, exists=exists
-        )
+        return StorageDemoResponse(path=path, action="info", url=url, size=size, exists=exists)
 
     @route.delete(
         "/storage/{path:path}",

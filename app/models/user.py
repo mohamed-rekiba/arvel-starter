@@ -2,14 +2,15 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime  # noqa: TC003
 from typing import ClassVar
+
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import Mapped, relationship  # noqa: TC002
 
 from arvel.audit import Auditable
 from arvel.data import ArvelModel, SoftDeletes, String, mapped_column
 from arvel.search import Searchable
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, relationship  # noqa: TC002
 
 
 class User(SoftDeletes, Searchable, Auditable, ArvelModel):
@@ -34,9 +35,7 @@ class User(SoftDeletes, Searchable, Auditable, ArvelModel):
     email: Mapped[str] = mapped_column(String(255), unique=True)
     password: Mapped[str] = mapped_column(String(255))
     email_verified_at: Mapped[datetime | None] = mapped_column(nullable=True)
-    parent_id: Mapped[int | None] = mapped_column(
-        ForeignKey("users.id"), nullable=True, index=True
-    )
+    parent_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
 
     children: Mapped[list[User]] = relationship(
         back_populates="parent",

@@ -10,8 +10,10 @@ Only checks for enabled services are registered — no-op drivers
 
 from __future__ import annotations
 
+import logging
+
 from arvel.cache.config import CacheSettings
-from arvel.http import BaseController, Response, route, status
+from arvel.http import BaseController, Response, route, status  # noqa: TC001
 from arvel.observability.health import (
     HealthEndpointPayload,
     HealthRegistry,
@@ -26,6 +28,8 @@ from arvel.observability.integration_health import (
 from arvel.queue.config import QueueSettings
 from arvel.storage.config import StorageSettings
 
+logger = logging.getLogger(__name__)
+
 
 def _build_registry() -> HealthRegistry:
     registry = HealthRegistry(timeout=5.0)
@@ -35,19 +39,19 @@ def _build_registry() -> HealthRegistry:
         if CacheSettings().driver not in {"memory", "null"}:
             registry.register(CacheHealthCheck())
     except Exception:  # pragma: no cover
-        pass
+        logger.debug("cache health check registration skipped", exc_info=True)
 
     try:
         if QueueSettings().driver not in {"sync", "null"}:
             registry.register(QueueHealthCheck())
     except Exception:  # pragma: no cover
-        pass
+        logger.debug("queue health check registration skipped", exc_info=True)
 
     try:
         if StorageSettings().driver not in {"null"}:
             registry.register(StorageHealthCheck())
     except Exception:  # pragma: no cover
-        pass
+        logger.debug("storage health check registration skipped", exc_info=True)
 
     return registry
 

@@ -18,14 +18,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from arvel.data.seeder import Seeder
-
 from app.models.user import User
+from arvel.data.seeder import Seeder
 from database.factories.user_factory import make_user
 
 if TYPE_CHECKING:
-    from arvel.data.transaction import Transaction
     from sqlalchemy.ext.asyncio import AsyncSession
+
+    from arvel.data.transaction import Transaction
 
 _SEED_EMAILS: tuple[str, ...] = (
     "root@starter.local",
@@ -40,14 +40,10 @@ _SEED_PASSWORD = "password"  # noqa: S105
 
 class DatabaseSeeder(Seeder):
     async def run(self, tx: Transaction) -> None:
-        session = tx._session  # noqa: SLF001
+        session = tx._session
 
-        root = await self._ensure_user(
-            session, email=_SEED_EMAILS[0], password=_SEED_PASSWORD
-        )
-        child_a = await self._ensure_user(
-            session, email=_SEED_EMAILS[1], parent_id=root.id
-        )
+        root = await self._ensure_user(session, email=_SEED_EMAILS[0], password=_SEED_PASSWORD)
+        child_a = await self._ensure_user(session, email=_SEED_EMAILS[1], parent_id=root.id)
         await self._ensure_user(session, email=_SEED_EMAILS[2], parent_id=root.id)
         await self._ensure_user(session, email=_SEED_EMAILS[3], parent_id=child_a.id)
 
@@ -68,12 +64,7 @@ class DatabaseSeeder(Seeder):
         parent_id: int | None = None,
     ) -> User:
         """Return existing user by email, or create one with Faker defaults."""
-        existing = (
-            await User.query(session)
-            .where(User.email == email)
-            .order_by(User.id)
-            .first()
-        )
+        existing = await User.query(session).where(User.email == email).order_by(User.id).first()
         if existing is not None:
             return existing
 

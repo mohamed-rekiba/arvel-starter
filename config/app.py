@@ -4,25 +4,30 @@ from __future__ import annotations
 
 from typing import Any
 
-from arvel.app.config import AppSettings as BaseAppSettings
 from pydantic import Field
+
+from arvel.app.config import AppSettings as BaseAppSettings
 
 
 class AppSettings(BaseAppSettings):  # type: ignore[no-redef]
     """Starter-specific defaults layered on top of the framework's AppSettings."""
 
-    app_openapi_security_schemes: dict[str, dict[str, Any]] | None = {
-        "BearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT",
-            "description": "Enter your JWT access token (from /api/auth/login)",
+    app_openapi_security_schemes: dict[str, dict[str, Any]] | None = Field(  # type: ignore[assignment]
+        default={
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT",
+                "description": "Enter your JWT access token (from /api/auth/login)",
+            },
         },
-    }
+    )
 
-    app_openapi_global_security: list[dict[str, list[str]]] | None = [
-        {"BearerAuth": []},
-    ]
+    app_openapi_global_security: list[dict[str, list[str]]] | None = Field(  # type: ignore[assignment]
+        default=[
+            {"BearerAuth": []},
+        ],
+    )
 
     app_openapi_tags: list[dict[str, Any]] | None = Field(  # type: ignore[assignment]
         default=[

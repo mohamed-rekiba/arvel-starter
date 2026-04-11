@@ -63,9 +63,7 @@ class DatabaseSettings(ModuleSettings):
             dialect = "mysql+aiomysql"
 
         raw_password = self.password.get_secret_value()
-        credentials = (
-            self.username if not raw_password else f"{self.username}:{raw_password}"
-        )
+        credentials = self.username if not raw_password else f"{self.username}:{raw_password}"
         return f"{dialect}://{credentials}@{self.host}:{self.port}/{self.database}"
 
 

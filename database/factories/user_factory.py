@@ -1,10 +1,10 @@
 from __future__ import annotations
 
-from arvel.security.contracts import HasherContract
-from arvel.security.hashing import BcryptHasher
 from faker import Faker
 
 from app.models.user import User
+from arvel.security.contracts import HasherContract
+from arvel.security.hashing import BcryptHasher
 
 fake = Faker()
 

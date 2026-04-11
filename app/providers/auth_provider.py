@@ -10,6 +10,8 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
+from starlette.responses import JSONResponse
+
 from arvel.auth.auth_manager import AuthManager
 from arvel.auth.guard import AuthGuardMiddleware
 from arvel.auth.guards import JwtGuard
@@ -22,17 +24,17 @@ from arvel.http.exception_handler import install_exception_handlers
 from arvel.http.request import RequestContainerMiddleware
 from arvel.security.config import SecuritySettings
 from arvel.validation.exceptions import ValidationError as ArvelValidationError
-from fastapi import FastAPI
-from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 if TYPE_CHECKING:
-    from arvel.foundation.application import Application
-    from arvel.foundation.container import ContainerBuilder
+    from fastapi import FastAPI
+    from starlette.requests import Request
     from starlette.types import ASGIApp, Receive, Send
     from starlette.types import Scope as ASGIScope
 
-_TEST_APP_KEY = "test-secret-key-for-starter-demo-only"  # noqa: S105
+    from arvel.foundation.application import Application
+    from arvel.foundation.container import ContainerBuilder
+
+_TEST_APP_KEY = "test-secret-key-for-starter-demo-only"
 
 _PROTECTED_PATH_PREFIXES: tuple[str, ...] = (
     "/api/users/me",
@@ -134,8 +136,7 @@ def _install_validation_handler(app: FastAPI) -> None:
                 "status": 422,
                 "detail": exc.detail,
                 "errors": [
-                    {"field": e.field, "rule": e.rule, "message": e.message}
-                    for e in exc.errors
+                    {"field": e.field, "rule": e.rule, "message": e.message} for e in exc.errors
                 ],
             },
             media_type="application/problem+json",
@@ -149,9 +150,7 @@ class AuthProvider(ServiceProvider):
 
     async def register(self, container: ContainerBuilder) -> None:
         container.provide_factory(TokenService, _make_token_service, scope=Scope.APP)
-        container.provide_factory(
-            ResetTokenService, _make_reset_token_service, scope=Scope.APP
-        )
+        container.provide_factory(ResetTokenService, _make_reset_token_service, scope=Scope.APP)
         container.provide_factory(AuthManager, _make_auth_manager, scope=Scope.APP)
 
     async def boot(self, app: Application) -> None:

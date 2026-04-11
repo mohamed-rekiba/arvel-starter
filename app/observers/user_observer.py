@@ -16,11 +16,10 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
-from arvel.broadcasting.channels import Channel
-from arvel.data import ModelObserver
-
 from app.events.user_created import UserCreated
 from app.models.user import User
+from arvel.broadcasting.channels import Channel
+from arvel.data import ModelObserver
 
 if TYPE_CHECKING:
     from arvel.broadcasting.contracts import BroadcastContract

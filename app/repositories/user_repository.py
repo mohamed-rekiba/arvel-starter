@@ -8,9 +8,8 @@ Demonstrates:
 
 from __future__ import annotations
 
-from arvel.data import Repository
-
 from app.models.user import User
+from arvel.data import Repository
 
 
 class UserRepository(Repository[User]):

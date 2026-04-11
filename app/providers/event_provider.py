@@ -9,6 +9,9 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING
 
+from app.events.user_created import UserCreated
+from app.jobs.prune_expired_tokens_job import PruneExpiredTokensJob
+from app.listeners.send_welcome_email_listener import SendWelcomeEmailListener
 from arvel.events import EventDispatcher
 from arvel.foundation.container import Scope
 from arvel.foundation.provider import ServiceProvider
@@ -17,10 +20,6 @@ from arvel.notifications.channels.mail_channel import MailChannel
 from arvel.notifications.dispatcher import NotificationDispatcher
 from arvel.queue.contracts import QueueContract
 from arvel.scheduler import InMemoryLockBackend, Scheduler
-
-from app.events.user_created import UserCreated
-from app.jobs.prune_expired_tokens_job import PruneExpiredTokensJob
-from app.listeners.send_welcome_email_listener import SendWelcomeEmailListener
 
 if TYPE_CHECKING:
     from arvel.foundation.application import Application
@@ -39,9 +38,7 @@ class EventProvider(ServiceProvider):
     priority: int = 16
 
     async def register(self, container: ContainerBuilder) -> None:
-        container.provide_factory(
-            EventDispatcher, _make_event_dispatcher, scope=Scope.APP
-        )
+        container.provide_factory(EventDispatcher, _make_event_dispatcher, scope=Scope.APP)
 
     async def boot(self, app: Application) -> None:
         event_dispatcher = await app.container.resolve(EventDispatcher)

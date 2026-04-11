@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import logging
 from datetime import UTC, datetime
-from typing import cast
-
-from sqlalchemy.engine import CursorResult
+from typing import TYPE_CHECKING, cast
 
 from arvel.queue import Job
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine import CursorResult
 
 logger = logging.getLogger(__name__)
 

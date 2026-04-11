@@ -1,13 +1,12 @@
 from __future__ import annotations
 
-from arvel.http import Router
-
 from app.http.controllers import (
     AuthController,
     HealthController,
     InfraController,
     UserController,
 )
+from arvel.http import Router
 
 router = Router()
 

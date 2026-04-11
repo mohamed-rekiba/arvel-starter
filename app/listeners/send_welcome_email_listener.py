@@ -3,13 +3,15 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
+from app.jobs.send_welcome_email_job import SendWelcomeEmailJob
 from arvel.events import Listener
-from arvel.queue.contracts import QueueContract
 from arvel.queue.manager import QueueManager
 
-from app.events.user_created import UserCreated
-from app.jobs.send_welcome_email_job import SendWelcomeEmailJob
+if TYPE_CHECKING:
+    from app.events.user_created import UserCreated
+    from arvel.queue.contracts import QueueContract
 
 logger = logging.getLogger(__name__)
 

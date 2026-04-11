@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
+
 from arvel.foundation.application import Application
 from arvel.testing import TestClient
 

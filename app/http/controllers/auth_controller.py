@@ -9,11 +9,6 @@ from __future__ import annotations
 import logging
 from datetime import UTC, datetime
 
-from arvel.auth.password_reset import ResetTokenService
-from arvel.auth.tokens import TokenService
-from arvel.http import BaseController, HTTPException, Inject, Request, route, status
-from arvel.security.contracts import HasherContract
-
 from app.http.resources.user_resource import (
     ChangePasswordRequest,  # noqa: TC001
     ForgotPasswordRequest,  # noqa: TC001
@@ -25,6 +20,10 @@ from app.http.resources.user_resource import (
     VerifyEmailRequest,  # noqa: TC001
 )
 from app.models.user import User
+from arvel.auth.password_reset import ResetTokenService
+from arvel.auth.tokens import TokenService
+from arvel.http import BaseController, HTTPException, Inject, Request, route, status  # noqa: TC001
+from arvel.security.contracts import HasherContract
 
 logger = logging.getLogger(__name__)
 
@@ -46,12 +45,7 @@ class AuthController(BaseController):
         token_service: TokenService = Inject(TokenService),
         hasher: HasherContract = Inject(HasherContract),
     ) -> TokenResponse:
-        user = (
-            await User.query()
-            .where(User.email == payload.email)
-            .order_by(User.id)
-            .first()
-        )
+        user = await User.query().where(User.email == payload.email).order_by(User.id).first()
         if user is None or not hasher.check(payload.password, user.password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -73,14 +67,12 @@ class AuthController(BaseController):
         token_service: TokenService = Inject(TokenService),
     ) -> TokenResponse:
         try:
-            claims = token_service.decode_token(
-                payload.refresh_token, expected_type="refresh"
-            )
+            claims = token_service.decode_token(payload.refresh_token, expected_type="refresh")
         except Exception:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid refresh token",
-            )
+            ) from None
 
         subject = claims["sub"]
         pair = token_service.create_token_pair(subject)
@@ -97,12 +89,7 @@ class AuthController(BaseController):
         payload: ForgotPasswordRequest,
         reset_service: ResetTokenService = Inject(ResetTokenService),
     ) -> MessageResponse:
-        user = (
-            await User.query()
-            .where(User.email == payload.email)
-            .order_by(User.id)
-            .first()
-        )
+        user = await User.query().where(User.email == payload.email).order_by(User.id).first()
         if user is not None:
             token = reset_service.create_reset_token(str(user.id))
             logger.info(
@@ -111,9 +98,7 @@ class AuthController(BaseController):
                 token,
             )
 
-        return MessageResponse(
-            message="If that email exists, a reset link has been sent."
-        )
+        return MessageResponse(message="If that email exists, a reset link has been sent.")
 
     @route.post(
         "/reset-password",
@@ -127,12 +112,7 @@ class AuthController(BaseController):
         reset_service: ResetTokenService = Inject(ResetTokenService),
         hasher: HasherContract = Inject(HasherContract),
     ) -> MessageResponse:
-        user = (
-            await User.query()
-            .where(User.email == payload.email)
-            .order_by(User.id)
-            .first()
-        )
+        user = await User.query().where(User.email == payload.email).order_by(User.id).first()
         if user is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -145,7 +125,7 @@ class AuthController(BaseController):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid or expired reset token",
-            )
+            ) from None
 
         user.password = hasher.make(payload.password)
         await user.save()
@@ -227,12 +207,7 @@ class AuthController(BaseController):
         payload: VerifyEmailRequest,
         reset_service: ResetTokenService = Inject(ResetTokenService),
     ) -> MessageResponse:
-        user = (
-            await User.query()
-            .where(User.email == payload.email)
-            .order_by(User.id)
-            .first()
-        )
+        user = await User.query().where(User.email == payload.email).order_by(User.id).first()
         if user is None:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
@@ -248,7 +223,7 @@ class AuthController(BaseController):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Invalid or expired verification token",
-            )
+            ) from None
 
         user.email_verified_at = datetime.now(UTC)
         await user.save()

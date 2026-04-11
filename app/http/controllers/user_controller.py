@@ -9,25 +9,7 @@ Auth-protected endpoints rely on ``AuthGuardMiddleware`` to set
 from __future__ import annotations
 
 import logging
-
-from arvel.data import PaginatedResult, TreeNode
-from arvel.http import (
-    BaseController,
-    File,
-    HTTPException,
-    Inject,
-    Path,
-    Query,
-    Request,
-    UploadFile,
-    route,
-    status,
-)
-from arvel.lock.contracts import LockContract
-from arvel.media.contracts import MediaContract
-from arvel.notifications.dispatcher import NotificationDispatcher
-from arvel.search.contracts import SearchEngine
-from arvel.storage.contracts import StorageContract
+from typing import TYPE_CHECKING
 
 from app.http.requests.user_create_request import UserCreateFormRequest
 from app.http.resources.user_resource import (
@@ -46,6 +28,27 @@ from app.http.resources.user_resource import (
 )
 from app.models.user import User
 from app.notifications.welcome_notification import WelcomeNotification
+from arvel.data import PaginatedResult
+from arvel.http import (
+    BaseController,
+    File,
+    HTTPException,
+    Inject,
+    Path,
+    Query,
+    Request,  # noqa: TC001
+    UploadFile,  # noqa: TC001
+    route,
+    status,
+)
+from arvel.lock.contracts import LockContract
+from arvel.media.contracts import MediaContract
+from arvel.notifications.dispatcher import NotificationDispatcher
+from arvel.search.contracts import SearchEngine
+from arvel.storage.contracts import StorageContract
+
+if TYPE_CHECKING:
+    from arvel.data import TreeNode
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +72,7 @@ class UserController(BaseController):
         logger.info("index query: %s", page, per_page)
         total = await User.count()
         offset = (page - 1) * per_page
-        users = (
-            await User.query().order_by(User.id).limit(per_page).offset(offset).all()
-        )
+        users = await User.query().order_by(User.id).limit(per_page).offset(offset).all()
         paginated = PaginatedResult(
             data=list(users),
             total=total,
@@ -197,9 +198,7 @@ class UserController(BaseController):
         self,
         user_id: int = Path(alias="id", ge=1),
         lock: LockContract = Inject(LockContract),
-        notification_dispatcher: NotificationDispatcher = Inject(
-            NotificationDispatcher
-        ),
+        notification_dispatcher: NotificationDispatcher = Inject(NotificationDispatcher),
     ) -> NotifyResponse:
         lock_key = f"notify:user:{user_id}"
         acquired = await lock.acquire(lock_key, ttl=10)
@@ -210,9 +209,7 @@ class UserController(BaseController):
             if user is None:
                 raise HTTPException(status_code=404, detail="User not found")
 
-            await notification_dispatcher.send(
-                user, WelcomeNotification(name=user.name)
-            )
+            await notification_dispatcher.send(user, WelcomeNotification(name=user.name))
             return NotifyResponse(status="sent", channel="mail")
         finally:
             await lock.release(lock_key)
@@ -252,9 +249,7 @@ class UserController(BaseController):
         summary="Get recursive hierarchy",
         operation_id="users_hierarchy",
     )
-    async def hierarchy(
-        self, user_id: int = Path(alias="id", ge=1)
-    ) -> HierarchyResponse:
+    async def hierarchy(self, user_id: int = Path(alias="id", ge=1)) -> HierarchyResponse:
         tree_nodes: list[TreeNode[User]] = (
             await User.query().descendants(user_id, max_depth=10).all_as_tree()
         )

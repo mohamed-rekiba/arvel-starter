@@ -37,18 +37,16 @@ class TestUserRepositoryCreate:
 
 class TestUserRepositoryFind:
     async def test_find_existing_user(self, db_session, transaction):
-        created = await create_user(
-            db_session, name="Charlie", email="charlie@repo.com"
-        )
+        created = await create_user(db_session, name="Charlie", email="charlie@repo.com")
         async with transaction:
             found = await transaction.users.find(created.id)
         assert found.id == created.id
         assert found.name == "Charlie"
 
     async def test_find_nonexistent_user_raises(self, transaction):
-        from arvel.data.exceptions import NotFoundError
-
         import pytest
+
+        from arvel.data.exceptions import NotFoundError
 
         async with transaction:
             with pytest.raises(NotFoundError):
@@ -89,9 +87,6 @@ class TestUserRepositoryDelete:
         async with transaction:
             await transaction.users.delete(user.id)
             found = (
-                await transaction.users.query()
-                .where(User.id == user.id)
-                .order_by(User.id)
-                .first()
+                await transaction.users.query().where(User.id == user.id).order_by(User.id).first()
             )
         assert found is None or found.deleted_at is not None
